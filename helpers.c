@@ -27,7 +27,8 @@ void extract_num(char *str, unsigned int line_number)
 		num = (num * 10) + (str[i] - 48);
 		i++;
 	}
-	if (str[i] != ' ' && str[i] != '\t' && str[i] != '\0' && str[i] != '\n')
+	if (str[i] != ' ' && str[i] != '\t' && str[i] != '\0' && str[i] != '\n'
+			&& str[i] != '$')
 	{
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
