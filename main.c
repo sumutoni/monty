@@ -67,13 +67,21 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 {
 	int i, j;
 	unsigned int line = 0;
+	char *copy;
 
+	copy = malloc(sizeof(char) * 1024);
+	if (!copy)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
 	for (i = 0; ins[i]; i++)
 	{
 		line++;
+		strcpy(copy, ins[i]);
 		for (j = 0; j < 7; j++)
 		{
-			if (find(ins[i], inst[j].opcode) > 1)
+			if (find(copy, inst[j].opcode) > 1)
 			{
 				fprintf(stderr,
 				"L%u: unknown instruction %s",
@@ -81,7 +89,7 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 				printf("\n");
 				exit(EXIT_FAILURE);
 			}
-			if (find(ins[i], inst[j].opcode) == 0)
+			if (find(copy, inst[j].opcode) == 0)
 				continue;
 			else
 			{
