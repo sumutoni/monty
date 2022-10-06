@@ -10,7 +10,7 @@ char **read_file(char *file)
 {
 	char *line = NULL;
 	size_t line_size = 0;
-	char **instr;
+	char **ins;
 	int i = 0;
 	File *f = fopen(file, "r");
 
@@ -20,7 +20,7 @@ char **read_file(char *file)
 		printf("\n");
 		exit(EXIT_FAILURE);
 	}
-	instr = malloc(sizeof(char *) * 1024);
+	ins = malloc(sizeof(char *) * 1024);
 	if (!instr)
 	{
 		fprintf(stderr, "Error: malloc failed");
@@ -30,12 +30,12 @@ char **read_file(char *file)
 	line_size = getline(&line, line_size, f);
 	while (!feof(f))
 	{
-		instr[i] = line;
+		ins[i] = line;
 		i++;
 		line_size = getline(&line, line_size, f);
 	}
 	fclose(f);
-	return (instr);
+	return (ins);
 }
 /**
  * find - finds an opcode in a string
@@ -59,31 +59,36 @@ int find(char *str, char *op)
 }
 /**
  * execute_opcode - runs the opcodes found in the monty file
- * @instr: instructions or opcodes to run
+ * @ins: instructions or opcodes to run
+ * @inst: array of opcodes and their functions
+ * @s: stack of elements
  */
-void execute_opcode(char **instr)
+void execute_opcode(char **ins, instruction_t **inst, stack_s **s)
 {
 	int i, j;
-       	unsigned int line = 0, value;
+	unsigned int line = 0, value;
 
-	for (i = 0; instr[i]; i++)
+	for (i = 0; ins[i]; i++)
 	{
 		line++;
-		for (j = 0; j < 2; j++)
+		for (j = 0; j < 7; j++)
 		{
-			if (find(instr[i], inst[j].opcode) > 1)
+			if (find(ins[i], inst[j].opcode) > 1)
 			{
-				fprintf(stderr, 
-				"L%u: unknown instruction %s", 
+				fprintf(stderr,
+				"L%u: unknown instruction %s",
 				line, inst[j].opcode);
 				printf("\n");
-				exit (EXIT_FAILURE);
+				exit(EXIT_FAILURE);
 			}
-			if (find(instr[i], inst[j].opcode) == 0)
+			if (find(ins[i], inst[j].opcode) == 0)
 				continue;
 			else
 			{
+				if (strcmp(inst[j].opcode, "push") == 0)
+					extract_num(ins[i], line);
 				inst[j].f(s, line);
+				continue;
 			}
 		}
 	}
@@ -97,12 +102,27 @@ void execute_opcode(char **instr)
  */
 int main(int argc, char *argv[])
 {
+	stack_t stack;
+	instruction_t **inst = {{"push", push}, {"pall", pall}, {"pint", pint},
+				{"pop", pop}, {"swap", swap}, {"add", add},
+				{"nop", nop}};
+
 	if (argc != 2)
 	{
 		fprintf(stderr, "Usage: monty file");
 		printf("\n");
 		exit(EXIT_FAILURE);
 	}
-	
+	stack = malloc(sizeof(stack_t));
+	if (!stack)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+	instr = read_file(argv[1]);
+	execute_opcodes(instr, inst, stack);
+	free(stack);
+	free(inst);
+	free(instr);
 	return (0);
 }
