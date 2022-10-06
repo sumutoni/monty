@@ -7,27 +7,27 @@
  */
 void extract_num(char *str, unsigned int line_number)
 {
-	int neg = 1;
+	int neg = 1, i = 0;
 
 	num = 0;
-	while (*str && (*str < '0' || *str > '9'))
+	while (str[i] && (str[i] < '0' || str[i] > '9'))
 	{
-		if (*str == '-')
+		if (str[i] == '-')
 			neg = -1;
-		++str;
+		i++;
 	}
-	if (*str == '\0')
+	if (str[i] == '\0')
 	{
 		fprintf(stderr, "L%u: usage: push integer", line_number);
 		printf("\n");
 		exit(EXIT_FAILURE);
 	}
-	while (*str && *str >= '0' && *str <= '9')
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
 	{
-		num = (num * 10) + (*str - 48);
-		++str;
+		num = (num * 10) + (str[i] - 48);
+		i++;
 	}
-	if (*str != ' ' || *str != '\t' || *str == '\0' || *str != '\n')
+	if (str[i] != ' ' && str[i] != '\t' && str[i] != '\0' && str[i] != '\n')
 	{
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
@@ -48,13 +48,10 @@ void pall(stack_t **stack, unsigned int line_number)
 	if (!stack || !(*stack))
 		return;
 	cur = *stack;
+	while (cur->next)
+		cur = cur->next;
 	while (cur)
 	{
-		if (cur->next != NULL)
-		{
-			cur = cur->next;
-			continue;
-		}
 		printf("%d\n", cur->n);
 		cur = cur->prev;
 	}

@@ -30,7 +30,8 @@ char **read_file(char *file)
 	line_size = getline(&line, &line_size, f);
 	while (!feof(f))
 	{
-		ins[i] = line;
+		ins[i] = malloc(sizeof(char) * line_size + 1);
+		strcpy(ins[i], line);
 		i++;
 		line_size = getline(&line, &line_size, f);
 	}
@@ -49,11 +50,10 @@ int find(char *str, char *op)
 	int count = 0;
 	char *token;
 
-	token = strtok(str, op);
-	while (token)
+	token = strstr(str, op);
+	if (token)
 	{
 		count++;
-		token = strtok(NULL, op);
 	}
 	return (count);
 }
@@ -65,7 +65,7 @@ int find(char *str, char *op)
  */
 void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 {
-	int i, j;
+	int i, j, val;
 	unsigned int line = 0;
 	char *copy;
 
@@ -81,7 +81,8 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 		strcpy(copy, ins[i]);
 		for (j = 0; j < 7; j++)
 		{
-			if (find(copy, inst[j].opcode) > 1)
+			val = find(copy, inst[j].opcode);
+			if (val > 1)
 			{
 				fprintf(stderr,
 				"L%u: unknown instruction %s",
@@ -89,9 +90,9 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 				printf("\n");
 				exit(EXIT_FAILURE);
 			}
-			if (find(copy, inst[j].opcode) == 0)
+			if (val == 0)
 				continue;
-			else
+			if (val == 1)
 			{
 				if (strcmp(inst[j].opcode, "push") == 0)
 					extract_num(ins[i], line);
