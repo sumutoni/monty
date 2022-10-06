@@ -97,7 +97,7 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 				if (strcmp(inst[j].opcode, "push") == 0)
 					extract_num(ins[i], line);
 				inst[j].f(s, line);
-				continue;
+				break;
 			}
 		}
 	}

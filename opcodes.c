@@ -18,10 +18,10 @@ void push(stack_t **stack, unsigned int line_number)
 	}
 	elm->n = num;
 	elm->next = NULL;
-	if (!stack || !(*stack))
+	if (!stack || !(*stack) || line_number == 1)
 	{
 		elm->prev = NULL;
-		stack = &elm;
+		*stack = elm;
 		return;
 	}
 	cur = *stack;
@@ -29,6 +29,7 @@ void push(stack_t **stack, unsigned int line_number)
 		cur = cur->next;
 	cur->next = elm;
 	elm->prev = cur;
+	*stack = elm;
 }
 /**
  * pint - prints the value at the top of the stack, followed by a new line
