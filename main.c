@@ -38,6 +38,57 @@ char **read_file(char *file)
 	return (instr);
 }
 /**
+ * find - finds an opcode in a string
+ * @str: string to search in
+ * @op: opcode to find
+ *
+ * Return: the number of times the opcode occurs in the string
+ */
+int find(char *str, char *op)
+{
+	int count = 0;
+	char *token;
+
+	token = strtok(str, op);
+	while (token)
+	{
+		count++;
+		token = strtok(NULL, op);
+	}
+	return (count);
+}
+/**
+ * execute_opcode - runs the opcodes found in the monty file
+ * @instr: instructions or opcodes to run
+ */
+void execute_opcode(char **instr)
+{
+	int i, j;
+       	unsigned int line = 0, value;
+
+	for (i = 0; instr[i]; i++)
+	{
+		line++;
+		for (j = 0; j < 2; j++)
+		{
+			if (find(instr[i], inst[j].opcode) > 1)
+			{
+				fprintf(stderr, 
+				"L%u: unknown instruction %s", 
+				line, inst[j].opcode);
+				printf("\n");
+				exit (EXIT_FAILURE);
+			}
+			if (find(instr[i], inst[j].opcode) == 0)
+				continue;
+			else
+			{
+				inst[j].f(s, line);
+			}
+		}
+	}
+}
+/**
  * main - main function of the program
  * @argc: number of arguments passed to the function
  * @argv: pointer to the arguments passed
