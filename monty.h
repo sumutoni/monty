@@ -1,13 +1,13 @@
 #ifndef MONTY_H
 #define MONTY_H
-#define _GNU_RESOURCE
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stddef.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 
-extern int num;
+int num;
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -47,4 +47,5 @@ void swap(stack_t **stack, unsigned int line_number);
 void add(stack_t **stack, unsigned int line_number);
 void pop(stack_t **stack, unsigned int line_number);
 void extract_num(char *, unsigned int);
+void execute_opcode(char **, instruction_t [], stack_t **);
 #endif

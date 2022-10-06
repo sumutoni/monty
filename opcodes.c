@@ -8,6 +8,7 @@
 void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *elm, *cur;
+	(void) line_number;
 
 	elm = malloc(sizeof(stack_t));
 	if (!elm)
@@ -61,7 +62,7 @@ void pint(stack_t **stack, unsigned int line_number)
  */
 void pop(stack_t **stack, unsigned int line_number)
 {
-	stack *cur;
+	stack_t *cur;
 
 	if (!stack || !(*stack))
 	{

@@ -7,7 +7,6 @@
  */
 void extract_num(char *str, unsigned int line_number)
 {
-	char *s;
 	int neg = 1;
 
 	num = 0;
@@ -25,7 +24,7 @@ void extract_num(char *str, unsigned int line_number)
 	}
 	while (*str && *str >= '0' && *str <= '9')
 	{
-		num = (num * 10) + atoi(*str);
+		num = (num * 10) + (*str - 48);
 		++str;
 	}
 	if (*str != ' ' || *str != '\t' || *str == '\0' || *str != '\n')
@@ -44,6 +43,7 @@ void extract_num(char *str, unsigned int line_number)
 void pall(stack_t **stack, unsigned int line_number)
 {
 	stack_t *cur;
+	(void) line_number;
 
 	if (!stack || !(*stack))
 		return;
@@ -66,4 +66,6 @@ void pall(stack_t **stack, unsigned int line_number)
  */
 void nop(stack_t **stack, unsigned int line_number)
 {
+	(void) stack;
+	(void) line_number;
 }

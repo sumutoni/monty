@@ -12,7 +12,7 @@ char **read_file(char *file)
 	size_t line_size = 0;
 	char **ins;
 	int i = 0;
-	File *f = fopen(file, "r");
+	FILE *f = fopen(file, "r");
 
 	if (!f)
 	{
@@ -27,12 +27,12 @@ char **read_file(char *file)
 		printf("\n");
 		exit(EXIT_FAILURE);
 	}
-	line_size = getline(&line, line_size, f);
+	line_size = getline(&line, &line_size, f);
 	while (!feof(f))
 	{
 		ins[i] = line;
 		i++;
-		line_size = getline(&line, line_size, f);
+		line_size = getline(&line, &line_size, f);
 	}
 	fclose(f);
 	return (ins);
@@ -63,10 +63,10 @@ int find(char *str, char *op)
  * @inst: array of opcodes and their functions
  * @s: stack of elements
  */
-void execute_opcode(char **ins, instruction_t **inst, stack_s **s)
+void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 {
 	int i, j;
-	unsigned int line = 0, value;
+	unsigned int line = 0;
 
 	for (i = 0; ins[i]; i++)
 	{
@@ -102,8 +102,8 @@ void execute_opcode(char **ins, instruction_t **inst, stack_s **s)
  */
 int main(int argc, char *argv[])
 {
-	stack_t stack;
-	instruction_t **inst = {{"push", push}, {"pall", pall}, {"pint", pint},
+	stack_t *stack;
+	instruction_t inst[] = {{"push", push}, {"pall", pall}, {"pint", pint},
 				{"pop", pop}, {"swap", swap}, {"add", add},
 				{"nop", nop}};
 
@@ -120,9 +120,8 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	instr = read_file(argv[1]);
-	execute_opcodes(instr, inst, stack);
+	execute_opcode(instr, inst, &stack);
 	free(stack);
-	free(inst);
 	free(instr);
 	return (0);
 }
