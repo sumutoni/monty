@@ -21,7 +21,7 @@ char **read_file(char *file)
 		exit(EXIT_FAILURE);
 	}
 	ins = malloc(sizeof(char *) * 1024);
-	if (!instr)
+	if (!ins)
 	{
 		fprintf(stderr, "Error: malloc failed");
 		printf("\n");
