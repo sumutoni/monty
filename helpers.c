@@ -18,6 +18,8 @@ void extract_num(char *str, unsigned int line_number)
 	}
 	if (str[i] == '\0')
 	{
+		free_struct(stack);
+		free_2D(instr);
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
@@ -29,6 +31,8 @@ void extract_num(char *str, unsigned int line_number)
 	if (str[i] != ' ' && str[i] != '\t' && str[i] != '\0' && str[i] != '\n'
 			&& str[i] != '$')
 	{
+		free_struct(stack);
+		free_2D(instr);
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
@@ -65,4 +69,36 @@ void nop(stack_t **stack, unsigned int line_number)
 {
 	(void) stack;
 	(void) line_number;
+}
+/**
+ * free_struct - frees a struct
+ * @sct: struct to free
+ */
+void free_struct(stack_t *sct)
+{
+	stack_t *tmp;
+
+	while (sct)
+	{
+		tmp = sct;
+		sct = sct->prev;
+		free(tmp);
+		tmp = NULL;
+	}
+}
+/**
+ * free_2D - frees 2D array
+ * @ar: array to free
+ */
+void free_2D(char **ar)
+{
+	int i;
+
+	for (i = 0; i < size; i++)
+	{
+		free(ar[i]);
+		ar[i] = NULL;
+	}
+	free(ar);
+	ar = NULL;
 }

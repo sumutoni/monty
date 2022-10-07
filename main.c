@@ -1,6 +1,32 @@
 #include "monty.h"
 
 /**
+ * count_lines - counts lines in a file
+ * @file: file
+ *
+ * Return: number of lines
+ */
+int count_lines(char *file)
+{
+	int lines = 0;
+	char c;
+	FILE *f = fopen(file, "r");
+
+	if (!f)
+	{
+		free_struct(stack);
+		fprintf(stderr, "Error: Can't open file %s\n", file);
+		exit(EXIT_FAILURE);
+	}
+	for (c = getc(f); c != EOF; c = getc(f))
+	{
+		if (c == '\n')
+			lines++;
+	}
+	fclose(f);
+	return (lines);
+}
+/**
  * read_file - reads the file passed to the program
  * @file: file to read from
  *
@@ -19,9 +45,12 @@ char **read_file(char *file)
 		fprintf(stderr, "Error: Can't open file %s\n", file);
 		exit(EXIT_FAILURE);
 	}
-	ins = malloc(sizeof(char *) * 1024);
+	size = count_lines(file);
+	ins = malloc(sizeof(char *) * size);
 	if (!ins)
 	{
+		free_struct(stack);
+		free(ins);
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
@@ -33,6 +62,7 @@ char **read_file(char *file)
 		i++;
 		line_size = getline(&line, &line_size, f);
 	}
+	free(line);
 	fclose(f);
 	return (ins);
 }
@@ -67,14 +97,16 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 	unsigned int line = 0;
 	char *copy;
 
-	copy = malloc(sizeof(char) * 1024);
-	if (!copy)
+	for (i = 0; i < size; i++)
 	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-	for (i = 0; ins[i]; i++)
-	{
+		copy = malloc(sizeof(char) * 1024);
+		if (!copy)
+		{
+			free_2D(ins);
+			free_struct(*s);
+			fprintf(stderr, "Error: malloc failed\n");
+			exit(EXIT_FAILURE);
+		}
 		line++;
 		strcpy(copy, ins[i]);
 		for (j = 0; j < 7; j++)
@@ -93,6 +125,7 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 			{
 				if (strcmp(inst[j].opcode, "push") == 0)
 					extract_num(ins[i], line);
+				free(copy);
 				inst[j].f(s, line);
 				break;
 			}
@@ -108,7 +141,6 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
  */
 int main(int argc, char *argv[])
 {
-	stack_t *stack;
 	instruction_t inst[] = {{"push", push}, {"pall", pall}, {"pint", pint},
 				{"pop", pop}, {"swap", swap}, {"add", add},
 				{"nop", nop}};
@@ -127,7 +159,7 @@ int main(int argc, char *argv[])
 	stack = NULL;
 	instr = read_file(argv[1]);
 	execute_opcode(instr, inst, &stack);
-	free(stack);
-	free(instr);
+	free_struct(stack);
+	free_2D(instr);
 	return (0);
 }

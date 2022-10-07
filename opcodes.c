@@ -7,29 +7,39 @@
  */
 void push(stack_t **stack, unsigned int line_number)
 {
-	stack_t *elm, *cur;
+	stack_t *cur;
 	(void) line_number;
 
-	elm = malloc(sizeof(stack_t));
-	if (!elm)
+	if (!stack || !(*stack))
 	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-	elm->n = num;
-	elm->next = NULL;
-	if (!stack || !(*stack) || line_number == 1)
-	{
-		elm->prev = NULL;
-		*stack = elm;
+		*stack = malloc(sizeof(stack_t));
+		if (!(*stack))
+		{
+			free_2D(instr);
+			free_struct(*stack);
+			fprintf(stderr, "Error: malloc failed\n");
+			exit(EXIT_FAILURE);
+		}
+		(*stack)->n = num;
+		(*stack)->prev = NULL;
+		(*stack)->next = NULL;
 		return;
 	}
 	cur = *stack;
 	while (cur->next)
 		cur = cur->next;
-	cur->next = elm;
-	elm->prev = cur;
-	*stack = elm;
+	cur->next = malloc(sizeof(stack_t));
+	if (!cur->next)
+	{
+		free_2D(instr);
+		free_struct(*stack);
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+	cur->next->n = num;
+	cur->next->prev = cur;
+	cur->next->next = NULL;
+	*stack = cur->next;
 }
 /**
  * pint - prints the value at the top of the stack, followed by a new line
@@ -42,6 +52,8 @@ void pint(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack))
 	{
+		free_2D(instr);
+		free_struct(*stack);
 		fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
 		exit(EXIT_FAILURE);
 	}
@@ -66,6 +78,8 @@ void pop(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack))
 	{
+		free_2D(instr);
+		free_struct(*stack);
 		fprintf(stderr, "L%u: can't pop an empty stack\n",
 				line_number);
 		exit(EXIT_FAILURE);
@@ -89,6 +103,8 @@ void swap(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack) || (!(*stack)->next && !(*stack)->prev))
 	{
+		free_struct(*stack);
+		free_2D(instr);
 		fprintf(stderr, "L%u: can't swap, stack too short\n",
 				line_number);
 		exit(EXIT_FAILURE);
@@ -112,6 +128,8 @@ void add(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack) || (!(*stack)->next && !(*stack)->prev))
 	{
+		free_struct(*stack);
+		free_2D(instr);
 		fprintf(stderr, "L%u: can't add, stack too short\n",
 				line_number);
 		exit(EXIT_FAILURE);
