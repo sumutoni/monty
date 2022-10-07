@@ -18,8 +18,7 @@ void extract_num(char *str, unsigned int line_number)
 	}
 	if (str[i] == '\0')
 	{
-		fprintf(stderr, "L%u: usage: push integer", line_number);
-		printf("\n");
+		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 	while (str[i] && str[i] >= '0' && str[i] <= '9')

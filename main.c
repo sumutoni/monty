@@ -16,15 +16,13 @@ char **read_file(char *file)
 
 	if (!f)
 	{
-		fprintf(stderr, "Error: Can't open file %s", file);
-		printf("\n");
+		fprintf(stderr, "Error: Can't open file %s\n", file);
 		exit(EXIT_FAILURE);
 	}
 	ins = malloc(sizeof(char *) * 1024);
 	if (!ins)
 	{
-		fprintf(stderr, "Error: malloc failed");
-		printf("\n");
+		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
 	line_size = getline(&line, &line_size, f);
@@ -85,9 +83,8 @@ void execute_opcode(char **ins, instruction_t inst[], stack_t **s)
 			if (val > 1)
 			{
 				fprintf(stderr,
-				"L%u: unknown instruction %s",
+				"L%u: unknown instruction %s\n",
 				line, inst[j].opcode);
-				printf("\n");
 				exit(EXIT_FAILURE);
 			}
 			if (val == 0)
@@ -118,8 +115,7 @@ int main(int argc, char *argv[])
 
 	if (argc != 2)
 	{
-		fprintf(stderr, "Usage: monty file");
-		printf("\n");
+		fprintf(stderr, "Usage: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 	stack = malloc(sizeof(stack_t));

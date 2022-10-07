@@ -42,8 +42,7 @@ void pint(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack))
 	{
-		fprintf(stderr, "L%u: can't pint, stack empty", line_number);
-		printf("\n");
+		fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 	cur = *stack;
@@ -67,9 +66,8 @@ void pop(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack))
 	{
-		fprintf(stderr, "L%u: can't pop an empty stack",
+		fprintf(stderr, "L%u: can't pop an empty stack\n",
 				line_number);
-		printf("\n");
 		exit(EXIT_FAILURE);
 	}
 	cur = *stack;
@@ -91,9 +89,8 @@ void swap(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack) || (!(*stack)->next && !(*stack)->prev))
 	{
-		fprintf(stderr, "L%u: can't swap, stack too short",
-				line_number);
-		printf("\n");
+		fprintf(stderr, "L%u: can't swap, stack too short\n",
+				line_numbe);
 		exit(EXIT_FAILURE);
 	}
 	cur = *stack;
@@ -115,9 +112,8 @@ void add(stack_t **stack, unsigned int line_number)
 
 	if (!stack || !(*stack) || (!(*stack)->next && !(*stack)->prev))
 	{
-		fprintf(stderr, "L%u: can't add, stack too short",
+		fprintf(stderr, "L%u: can't add, stack too short\n",
 				line_number);
-		printf("\n");
 		exit(EXIT_FAILURE);
 	}
 	cur = *stack;
