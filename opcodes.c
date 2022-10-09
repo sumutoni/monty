@@ -89,6 +89,7 @@ void pop(stack_t **stack, unsigned int line_number)
 		cur = cur->next;
 	cur->prev->next = NULL;
 	*stack = cur->prev;
+	free(cur);
 	cur = NULL;
 }
 /**
@@ -141,5 +142,6 @@ void add(stack_t **stack, unsigned int line_number)
 	cur->prev->n = result;
 	cur->prev->next = NULL;
 	*stack = cur->prev;
+	free(cur);
 	cur = NULL;
 }

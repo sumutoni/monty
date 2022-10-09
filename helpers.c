@@ -1,5 +1,7 @@
 #include "monty.h"
 
+void free_struct(stack_t *sct);
+void free_instr(char **ar);
 /**
  * extract_num - extracts number from string
  * @str: string to extract from
@@ -67,8 +69,8 @@ void pall(stack_t **stack, unsigned int line_number)
  */
 void nop(stack_t **stack, unsigned int line_number)
 {
-	(void) stack;
 	(void) line_number;
+	(void) stack;
 }
 /**
  * free_struct - frees a struct

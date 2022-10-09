@@ -150,12 +150,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Usage: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	stack = malloc(sizeof(stack_t));
-	if (!stack)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
 	stack = NULL;
 	instr = read_file(argv[1]);
 	execute_opcode(instr, inst, &stack);
